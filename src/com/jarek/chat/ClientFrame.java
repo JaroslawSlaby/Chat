@@ -18,6 +18,7 @@ public class ClientFrame extends JFrame{
     private JPanel btnPanel = new JPanel();
     private JButton msgSend = new JButton("Send message!");
     private JButton clearArea = new JButton("Clear message area!");
+    private JButton flSend = new JButton("Send file!");
 
     static Socket s;
     static DataInputStream dataInputStream;
@@ -46,8 +47,11 @@ public class ClientFrame extends JFrame{
 
         Container container = getContentPane();
         container.add(new JScrollPane(msgArea), BorderLayout.CENTER);
+        btnPanel.setLayout(new FlowLayout());
+        btnPanel.setPreferredSize(new Dimension(200,200));
         btnPanel.add(msgSend, BorderLayout.NORTH);
         btnPanel.add(clearArea, BorderLayout.SOUTH);
+        btnPanel.add(flSend, BorderLayout.WEST);
         container.add(btnPanel, BorderLayout.EAST);
         container.add(msgText, BorderLayout.SOUTH);
         setTitle("Client");
