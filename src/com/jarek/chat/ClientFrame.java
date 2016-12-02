@@ -81,21 +81,21 @@ public class ClientFrame extends JFrame implements ActionListener{
         else if(e.getSource() == fileSend){
 
             SendFileFrame sendFile = new SendFileFrame(this);
-            SendFileFrame.createFrame();
+            sendFile.createFrame();
 
-            if(sendFile.getFile() != null){
+          //  if(sendFile.getFile() != null){
 
-                file = sendFile.getFile();
+            //    file = sendFile.getFile();
 
             }
 
-            else{
-                JOptionPane.showMessageDialog(container, "No file choosed! Check this " +
-                        "out!", "File error",JOptionPane.ERROR_MESSAGE);
+//            else{
+//                JOptionPane.showMessageDialog(container, "No file choosed! Check this " +
+//                        "out!", "File error",JOptionPane.ERROR_MESSAGE);
 
            //     msgArea.setText(file.getName());
-            }
-        }
+          //  }
+        //}
     }
 
     private void listen()  {

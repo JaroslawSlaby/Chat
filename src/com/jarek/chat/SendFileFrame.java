@@ -26,10 +26,9 @@ public class SendFileFrame extends JPanel implements ActionListener {
     private static JFrame frame = new JFrame("Choose file to send!");
     private ClientFrame clientFrame;
 
-    public SendFileFrame(ClientFrame client){
+    public SendFileFrame(){
 
         super(new BorderLayout());
-        clientFrame = client;
         fileName = new JTextField();
         fileName.setEditable(false);
         filePath = new JTextField();
@@ -47,6 +46,11 @@ public class SendFileFrame extends JPanel implements ActionListener {
         add(fileName,BorderLayout.CENTER);
         add(filePath, BorderLayout.SOUTH);
      }
+
+    public SendFileFrame(ClientFrame clientFrame)
+    {
+        this.clientFrame = clientFrame;
+    }
 
     public void actionPerformed(ActionEvent e){
 
@@ -67,7 +71,8 @@ public class SendFileFrame extends JPanel implements ActionListener {
         }
         else if(e.getSource() == sendFile)
         {
-            clientFrame.setFile(file);
+
+          //  clientFrame.setFile(file); DO POPRAWY!
         }
 
         else if(e.getSource() == cancel){
@@ -80,8 +85,7 @@ public class SendFileFrame extends JPanel implements ActionListener {
     public static void createFrame() {
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-     //   ClientFrame cl = new ClientFrame();
-      //  frame.add(new SendFileFrame(cl));
+        frame.add(new SendFileFrame());
         frame.pack();
         frame.setVisible(true);
 
