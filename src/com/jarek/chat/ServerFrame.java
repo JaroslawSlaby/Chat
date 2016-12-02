@@ -69,7 +69,7 @@ public class ServerFrame extends JFrame{
 
     private void listen() {
 
-        String msgIn;
+        String msgIn = "";
 
         try {
 
@@ -79,7 +79,7 @@ public class ServerFrame extends JFrame{
             dataInputStream = new DataInputStream(s.getInputStream());
             dataOutputStream = new DataOutputStream(s.getOutputStream());
 
-            while(true) {
+            while(msgIn != "exit") {
 
                 msgIn = dataInputStream.readUTF();
                 System.out.println(msgIn);
