@@ -36,7 +36,7 @@ public class ServerFrame extends JFrame{
                 msgText.setText("");
             } catch (Exception i) {
                 JOptionPane.showMessageDialog(this, "Send message error! Check your " +
-                        "connection", "Send error!", JOptionPane.ERROR_MESSAGE);
+                        "connection or if is any client!", "Send error!", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -94,6 +94,7 @@ public class ServerFrame extends JFrame{
     }
 
     public static void main(String[] args) {
+
 
         ServerFrame serverFrame = new ServerFrame();
         serverFrame.listen();
