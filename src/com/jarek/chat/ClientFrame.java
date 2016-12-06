@@ -1,6 +1,5 @@
 package com.jarek.chat;
 
-import com.jarek.chat.API.Connection;
 import com.jarek.chat.extras.SendFileFrame;
 import com.jarek.chat.gui.Gui;
 
@@ -16,7 +15,7 @@ import java.util.Objects;
 /**
  * Created by Jarek on 09.11.16.
  */
-public class ClientFrame extends Gui implements ActionListener, Connection{
+public class ClientFrame extends Gui implements ActionListener {
 
     static Socket s;
     static DataInputStream dataInputStream;
@@ -50,7 +49,7 @@ public class ClientFrame extends Gui implements ActionListener, Connection{
         }
     }
 
-    public void listen()  {
+    private void listen()  {
         try {
             String msgIn = "";
             s = new Socket("127.0.0.1" , 1220);
