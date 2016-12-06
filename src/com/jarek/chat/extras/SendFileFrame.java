@@ -1,11 +1,13 @@
-package com.jarek.chat;
+package com.jarek.chat.extras;
+
+import com.jarek.chat.ClientFrame;
+import com.jarek.chat.ServerFrame;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.concurrent.Semaphore;
 
 /**
  * Created by jarek on 12/2/16.
@@ -21,7 +23,6 @@ public class SendFileFrame extends JPanel implements ActionListener {
     private JButton cancel = new JButton("Cancel!");
     private JTextField fileName;
     private JTextField filePath;
-    private JPanel main;
     public File file = null;
 
     private ClientFrame clientFrame;
@@ -50,6 +51,7 @@ public class SendFileFrame extends JPanel implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(this);
         frame.pack();
+        frame.setLocationRelativeTo(serverFrame);
         frame.setVisible(true);
      }
 
