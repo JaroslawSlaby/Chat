@@ -14,7 +14,6 @@ import java.io.File;
  */
 public class SendFileFrame extends JPanel implements ActionListener {
 
-
     private JPanel panelMain;
     private JFileChooser fileChooser;
     private JButton selectFile = new JButton("Select file to send!");
@@ -99,7 +98,5 @@ public class SendFileFrame extends JPanel implements ActionListener {
         else if(e.getSource() == cancel){
             frame.dispose();
         }
-
     }
-
 }
