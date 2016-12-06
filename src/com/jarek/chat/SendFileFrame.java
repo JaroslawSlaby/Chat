@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by jarek on 12/2/16.
@@ -16,17 +17,20 @@ public class SendFileFrame extends JPanel implements ActionListener {
     private JFileChooser fileChooser;
     private JButton selectFile = new JButton("Select file to send!");
     private JButton sendFile = new JButton("Send choosed file!");
+    private static JFrame frame = new JFrame("Choose file to send!");
     private JButton cancel = new JButton("Cancel!");
     private JTextField fileName;
     private JTextField filePath;
     private JPanel main;
-    private File file;
-    private static JFrame frame = new JFrame("Choose file to send!");
+    public File file = null;
+
     private ClientFrame clientFrame;
+    private ServerFrame serverFrame;
+    private int mode;
 
-    public SendFileFrame(){
 
-        super(new BorderLayout());
+    private void showGUI() {
+
         fileName = new JTextField();
         fileName.setEditable(false);
         filePath = new JTextField();
@@ -43,12 +47,26 @@ public class SendFileFrame extends JPanel implements ActionListener {
         add(panelMain, BorderLayout.PAGE_START);
         add(fileName,BorderLayout.CENTER);
         add(filePath, BorderLayout.SOUTH);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(this);
+        frame.pack();
+        frame.setVisible(true);
      }
 
-    public SendFileFrame(ClientFrame clientFrame)
-    {
-        this.clientFrame = clientFrame;
-    }
+     public SendFileFrame(ClientFrame client) {
+        super(new BorderLayout());
+        showGUI();
+        this.clientFrame = client;
+        mode = 1;
+
+     }
+
+     public SendFileFrame(ServerFrame server) {
+         super(new BorderLayout());
+         showGUI();
+         this.serverFrame = server;
+         mode = 2;
+     }
 
     public void actionPerformed(ActionEvent e){
 
@@ -69,36 +87,17 @@ public class SendFileFrame extends JPanel implements ActionListener {
         }
         else if(e.getSource() == sendFile)
         {
-
-          //  clientFrame.setFile(file); DO POPRAWY!
+            if(mode == 1)
+                clientFrame.setFile(this.file);
+            else if(mode == 2)
+                serverFrame.setFile(this.file);
+            frame.dispose();
         }
 
         else if(e.getSource() == cancel){
-            this.setVisible(false);
+            frame.dispose();
         }
-            // close
 
     }
 
-    public static void createFrame() {
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new SendFileFrame());
-        frame.pack();
-        frame.setVisible(true);
-
-    }
-
-    public static void main(String[] args) {
-
-            SwingUtilities.invokeLater(() -> {
-             //   UIManager.put("swing.boldMetal", Boolean.FALSE);
-                createFrame();
-            });
-
-    }
-
-    public File getFile() {
-        return file;
-    }
 }

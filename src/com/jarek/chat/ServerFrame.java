@@ -2,53 +2,42 @@ package com.jarek.chat;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Objects;
 
 /**
  * Created by Jarek on 09.11.16.
  */
-public class ServerFrame extends JFrame{
+public class ServerFrame extends JFrame implements ActionListener{
     private JPanel panelMain;
     private JTextField msgText = new JTextField();
-    private JButton msgSend = new JButton("Send message!");
     private JPanel btnPanel = new JPanel();
+    private JButton msgSend = new JButton("Send message!");
     private JButton clearArea = new JButton("Clear message area!");
+    private JButton fileSend = new JButton("Send file!");
     private JTextArea msgArea = new JTextArea(10,32);
+    private File file;
+    private SendFileFrame sendFile;
 
     private static ServerSocket ss;
     private static Socket s;
     private static DataInputStream dataInputStream;
     private static DataOutputStream dataOutputStream;
 
-    public ServerFrame() {
-
-        msgSend.addActionListener(e -> {
-            try {
-                String msgout;
-                msgout = msgText.getText().trim();
-                dataOutputStream.writeUTF(msgout);
-                msgText.setText("");
-            } catch (Exception i) {
-                JOptionPane.showMessageDialog(this, "Send message error! Check your " +
-                        "connection or if is any client!", "Send error!", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-
-        clearArea.addActionListener(e -> msgArea.setText(""));
+    private void createGUI(String title) {
 
         msgArea.setEditable(false);
         msgArea.setWrapStyleWord(true);
         msgArea.setLineWrap(true);
 
-       // msgSend.addActionListener(this);
-      //  clearArea.addActionListener(this);
-       // fileSend.addActionListener(this);
+        msgSend.addActionListener(this);
+        clearArea.addActionListener(this);
+        fileSend.addActionListener(this);
 
         Container container = getContentPane();
         container.add(new JScrollPane(msgArea), BorderLayout.CENTER);
@@ -56,10 +45,10 @@ public class ServerFrame extends JFrame{
         btnPanel.setPreferredSize(new Dimension(200,200));
         btnPanel.add(msgSend, BorderLayout.NORTH);
         btnPanel.add(clearArea, BorderLayout.SOUTH);
-      //  btnPanel.add(fileSend, BorderLayout.WEST);
+        btnPanel.add(fileSend, BorderLayout.WEST);
         container.add(btnPanel, BorderLayout.EAST);
         container.add(msgText, BorderLayout.SOUTH);
-        setTitle("Server");
+        setTitle(title);
         pack();
         addWindowListener(new WindowAdapter() {
             @Override
@@ -71,6 +60,40 @@ public class ServerFrame extends JFrame{
             }
         });
         setVisible(true);
+    }
+
+    public ServerFrame(String title) {
+        super(title);
+        createGUI(title);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (e.getSource() == msgSend) {
+
+            try {
+
+                String msgOut;
+                msgOut = msgText.getText().trim();
+                if(!Objects.equals(msgOut, "")) {
+                    dataOutputStream.writeUTF(msgOut);
+                    msgText.setText("");
+                }
+
+            } catch (Exception i) {
+                JOptionPane.showMessageDialog(this, "Send message error! Check your " +
+                        "connection or if server is closed!", "Send error!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (e.getSource() == clearArea) {
+
+            msgArea.setText("");
+
+        } else if (e.getSource() == fileSend) {
+
+            sendFile = new SendFileFrame(this);
+
+        }
     }
 
     private void listen() {
@@ -101,8 +124,12 @@ public class ServerFrame extends JFrame{
 
     public static void main(String[] args) {
 
-            ServerFrame serverFrame = new ServerFrame();
+            ServerFrame serverFrame = new ServerFrame("Server");
             serverFrame.listen();
 
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }

@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.net.Socket;
+import java.util.Objects;
 
 /**
  * Created by Jarek on 09.11.16.
@@ -77,8 +78,10 @@ public class ClientFrame extends JFrame implements ActionListener{
 
                 String msgOut;
                 msgOut = msgText.getText().trim();
-                dataOutputStream.writeUTF(msgOut);
-                msgText.setText("");
+                if(!Objects.equals(msgOut, "")) {
+                    dataOutputStream.writeUTF(msgOut);
+                    msgText.setText("");
+                }
 
             } catch (Exception i) {
                 JOptionPane.showMessageDialog(this, "Send message error! Check your " +
@@ -104,7 +107,7 @@ public class ClientFrame extends JFrame implements ActionListener{
 
             String msgIn = "";
             s = new Socket("127.0.0.1" , 1220);
-
+    
             dataInputStream = new DataInputStream(s.getInputStream());
             dataOutputStream = new DataOutputStream(s.getOutputStream());
 
