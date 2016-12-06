@@ -1,5 +1,7 @@
 package com.jarek.chat;
 
+import com.jarek.chat.gui.Gui;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -13,58 +15,15 @@ import java.util.Objects;
 /**
  * Created by Jarek on 09.11.16.
  */
-public class ServerFrame extends JFrame implements ActionListener{
-    private JPanel panelMain;
-    private JTextField msgText = new JTextField();
-    private JPanel btnPanel = new JPanel();
-    private JButton msgSend = new JButton("Send message!");
-    private JButton clearArea = new JButton("Clear message area!");
-    private JButton fileSend = new JButton("Send file!");
-    private JTextArea msgArea = new JTextArea(10,32);
-    private File file;
-    private SendFileFrame sendFile;
+public class ServerFrame extends Gui implements ActionListener{
 
     private static ServerSocket ss;
     private static Socket s;
     private static DataInputStream dataInputStream;
     private static DataOutputStream dataOutputStream;
 
-    private void createGUI(String title) {
-
-        msgArea.setEditable(false);
-        msgArea.setWrapStyleWord(true);
-        msgArea.setLineWrap(true);
-
-        msgSend.addActionListener(this);
-        clearArea.addActionListener(this);
-        fileSend.addActionListener(this);
-
-        Container container = getContentPane();
-        container.add(new JScrollPane(msgArea), BorderLayout.CENTER);
-        btnPanel.setLayout(new FlowLayout());
-        btnPanel.setPreferredSize(new Dimension(200,200));
-        btnPanel.add(msgSend, BorderLayout.NORTH);
-        btnPanel.add(clearArea, BorderLayout.SOUTH);
-        btnPanel.add(fileSend, BorderLayout.WEST);
-        container.add(btnPanel, BorderLayout.EAST);
-        container.add(msgText, BorderLayout.SOUTH);
-        setTitle(title);
-        pack();
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                int choice = JOptionPane.showConfirmDialog(container, "Exit?", "Close CHAT",
-                        JOptionPane.OK_OPTION);
-                if (choice == JOptionPane.OK_OPTION)
-                    System.exit(0); // do dopracowania
-            }
-        });
-        setVisible(true);
-    }
-
     public ServerFrame(String title) {
         super(title);
-        createGUI(title);
     }
 
     @Override
@@ -91,7 +50,7 @@ public class ServerFrame extends JFrame implements ActionListener{
 
         } else if (e.getSource() == fileSend) {
 
-            sendFile = new SendFileFrame(this);
+            SendFileFrame sendFile = new SendFileFrame(this);
 
         }
     }
@@ -131,5 +90,6 @@ public class ServerFrame extends JFrame implements ActionListener{
 
     public void setFile(File file) {
         this.file = file;
+        msgArea.append("Loaded file: " + this.file.getName() + "\n");
     }
 }
