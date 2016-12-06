@@ -15,7 +15,7 @@ import java.net.Socket;
  */
 public class ServerFrame extends JFrame{
     private JPanel panelMain;
-    private JTextField msgText;
+    private JTextField msgText = new JTextField();
     private JButton msgSend = new JButton("Send message!");
     private JPanel btnPanel = new JPanel();
     private JButton clearArea = new JButton("Clear message area!");
@@ -46,16 +46,21 @@ public class ServerFrame extends JFrame{
         msgArea.setWrapStyleWord(true);
         msgArea.setLineWrap(true);
 
+       // msgSend.addActionListener(this);
+      //  clearArea.addActionListener(this);
+       // fileSend.addActionListener(this);
+
         Container container = getContentPane();
         container.add(new JScrollPane(msgArea), BorderLayout.CENTER);
+        btnPanel.setLayout(new FlowLayout());
+        btnPanel.setPreferredSize(new Dimension(200,200));
         btnPanel.add(msgSend, BorderLayout.NORTH);
         btnPanel.add(clearArea, BorderLayout.SOUTH);
+      //  btnPanel.add(fileSend, BorderLayout.WEST);
         container.add(btnPanel, BorderLayout.EAST);
         container.add(msgText, BorderLayout.SOUTH);
         setTitle("Server");
         pack();
-        setVisible(true);
-
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -65,6 +70,7 @@ public class ServerFrame extends JFrame{
                     System.exit(0); // do dopracowania
             }
         });
+        setVisible(true);
     }
 
     private void listen() {
@@ -95,8 +101,8 @@ public class ServerFrame extends JFrame{
 
     public static void main(String[] args) {
 
+            ServerFrame serverFrame = new ServerFrame();
+            serverFrame.listen();
 
-        ServerFrame serverFrame = new ServerFrame();
-        serverFrame.listen();
     }
 }

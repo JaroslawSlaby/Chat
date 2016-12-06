@@ -15,6 +15,7 @@ import java.net.Socket;
  * Created by Jarek on 09.11.16.
  */
 public class ClientFrame extends JFrame implements ActionListener{
+
     private JPanel panelMain;
     private JTextArea msgArea = new JTextArea(10, 32);
     private JTextField msgText = new JTextField();
@@ -23,13 +24,13 @@ public class ClientFrame extends JFrame implements ActionListener{
     private JButton clearArea = new JButton("Clear message area!");
     private JButton fileSend = new JButton("Send file!");
     private File file;
-    private Container container = getContentPane();
+    private SendFileFrame sendFile;
 
     static Socket s;
     static DataInputStream dataInputStream;
     static DataOutputStream dataOutputStream;
 
-    public ClientFrame() {
+    private void createGUI(String title) {
 
         msgArea.setEditable(false);
         msgArea.setWrapStyleWord(true);
@@ -39,6 +40,7 @@ public class ClientFrame extends JFrame implements ActionListener{
         clearArea.addActionListener(this);
         fileSend.addActionListener(this);
 
+        Container container = getContentPane();
         container.add(new JScrollPane(msgArea), BorderLayout.CENTER);
         btnPanel.setLayout(new FlowLayout());
         btnPanel.setPreferredSize(new Dimension(200,200));
@@ -47,9 +49,7 @@ public class ClientFrame extends JFrame implements ActionListener{
         btnPanel.add(fileSend, BorderLayout.WEST);
         container.add(btnPanel, BorderLayout.EAST);
         container.add(msgText, BorderLayout.SOUTH);
-        setTitle("Client");
-        pack();
-        setVisible(true);
+        setTitle(title);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -59,51 +59,50 @@ public class ClientFrame extends JFrame implements ActionListener{
                     System.exit(0); // do dopracowania
             }
         });
+        pack();
+        setVisible(true);
+    }
 
+    public ClientFrame(String title) {
+        super(title);
+        createGUI(title);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         if(e.getSource() == msgSend) {
+
             try {
+
                 String msgOut;
                 msgOut = msgText.getText().trim();
                 dataOutputStream.writeUTF(msgOut);
                 msgText.setText("");
+
             } catch (Exception i) {
                 JOptionPane.showMessageDialog(this, "Send message error! Check your " +
                         "connection or if server is closed!", "Send error!", JOptionPane.ERROR_MESSAGE);
             }
         }
         else if(e.getSource() == clearArea) {
+
             msgArea.setText("");
+
         }
-        else if(e.getSource() == fileSend){
+        else if(e.getSource() == fileSend) {
 
-            SendFileFrame sendFile = new SendFileFrame(this);
-            sendFile.createFrame();
+            sendFile = new SendFileFrame(this);
 
-          //  if(sendFile.getFile() != null){
+        }
 
-            //    file = sendFile.getFile();
-
-            }
-
-//            else{
-//                JOptionPane.showMessageDialog(container, "No file choosed! Check this " +
-//                        "out!", "File error",JOptionPane.ERROR_MESSAGE);
-
-           //     msgArea.setText(file.getName());
-          //  }
-        //}
     }
 
     private void listen()  {
 
-        String msgIn = "";
-
         try {
 
+            String msgIn = "";
             s = new Socket("127.0.0.1" , 1220);
 
             dataInputStream = new DataInputStream(s.getInputStream());
@@ -118,19 +117,21 @@ public class ClientFrame extends JFrame implements ActionListener{
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Receive message error! Check your " +
-                "connection!", "Receive error!", JOptionPane.ERROR_MESSAGE);
-            }
+                    "connection!", "Receive error!", JOptionPane.ERROR_MESSAGE);
+        }
 
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            ClientFrame clientFrame = new ClientFrame();
+
+            ClientFrame clientFrame = new ClientFrame("Client");
             clientFrame.listen();
-        });
+
     }
 
     public void setFile(File file) {
+
         this.file = file;
+        msgArea.append(this.file.getName() + "\n");
     }
 }

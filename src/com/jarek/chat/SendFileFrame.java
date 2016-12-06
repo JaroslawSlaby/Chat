@@ -1,7 +1,5 @@
 package com.jarek.chat;
 
-import javafx.scene.Parent;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
