@@ -8,11 +8,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by jarek on 12/2/16.
  */
-public class SendFileFrame extends JPanel implements ActionListener {
+public class SendFileGUI extends JPanel implements ActionListener {
 
     private JPanel panelMain;
     private JFileChooser fileChooser;
@@ -54,7 +55,7 @@ public class SendFileFrame extends JPanel implements ActionListener {
         frame.setVisible(true);
      }
 
-     public SendFileFrame(ClientFrame client) {
+     public SendFileGUI(ClientFrame client) {
         super(new BorderLayout());
         showGUI();
         this.clientFrame = client;
@@ -62,7 +63,7 @@ public class SendFileFrame extends JPanel implements ActionListener {
 
      }
 
-     public SendFileFrame(ServerFrame server) {
+     public SendFileGUI(ServerFrame server) {
          super(new BorderLayout());
          showGUI();
          this.serverFrame = server;
@@ -73,7 +74,7 @@ public class SendFileFrame extends JPanel implements ActionListener {
 
         if(e.getSource() == selectFile) {
 
-            int returnVal = fileChooser.showOpenDialog(SendFileFrame.this);
+            int returnVal = fileChooser.showOpenDialog(SendFileGUI.this);
 
             if(returnVal == JFileChooser.APPROVE_OPTION) {
 
@@ -91,7 +92,11 @@ public class SendFileFrame extends JPanel implements ActionListener {
             if(mode == 1)
                 clientFrame.setFile(this.file);
             else if(mode == 2)
-                serverFrame.setFile(this.file);
+                try {
+                    serverFrame.setFile(this.file);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             frame.dispose();
         }
 

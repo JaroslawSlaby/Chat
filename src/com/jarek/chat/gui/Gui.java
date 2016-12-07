@@ -17,13 +17,13 @@ import java.util.Objects;
  */
 public class Gui extends JFrame implements ActionListener{
 
-    public JTextArea msgArea = new JTextArea(10, 32);
-    public JTextField msgText = new JTextField();
+    protected JTextArea msgArea = new JTextArea(10, 32);
+    protected JTextField msgText = new JTextField();
     private JPanel btnPanel = new JPanel();
-    public JButton msgSend = new JButton("Send message!");
-    public JButton clearArea = new JButton("Clear message area!");
-    public JButton fileSend = new JButton("Send file!");
-    public File file;
+    protected JButton msgSend = new JButton("Send message!");
+    private JButton clearArea = new JButton("Clear message area!");
+    protected JButton fileSend = new JButton("Send file!");
+    protected File file;
 
     public Gui(String title){
 

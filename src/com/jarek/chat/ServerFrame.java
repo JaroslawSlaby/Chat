@@ -1,14 +1,13 @@
 package com.jarek.chat;
 
-import com.jarek.chat.extras.SendFileFrame;
+import com.jarek.chat.extras.SendFile;
+import com.jarek.chat.extras.SendFileGUI;
 import com.jarek.chat.gui.Gui;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Objects;
@@ -21,7 +20,8 @@ public class ServerFrame extends Gui implements ActionListener {
     private static ServerSocket ss;
     private static Socket s;
     private static DataInputStream dataInputStream;
-    public static DataOutputStream dataOutputStream;
+    private static DataOutputStream dataOutputStream;
+    private SendFile sendFile = new SendFile();
 
     public ServerFrame(String title) {
         super(title);
@@ -31,14 +31,14 @@ public class ServerFrame extends Gui implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         if(e.getSource() == fileSend) {
-            SendFileFrame sendFile = new SendFileFrame(this);
+            SendFileGUI sendFile = new SendFileGUI(this);
         }
         else if(e.getSource() == msgSend) {
             try {
                 String msgOut;
                 msgOut = msgText.getText().trim();
                 if(!Objects.equals(msgOut, "")) {
-                    ServerFrame.dataOutputStream.writeUTF(msgOut);// BLAD!
+                    ServerFrame.dataOutputStream.writeUTF(msgOut);
                     msgText.setText("");
                 }
 
@@ -73,8 +73,10 @@ public class ServerFrame extends Gui implements ActionListener {
             serverFrame.listen();
     }
 
-    public void setFile(File file) {
+    public void setFile(File file) throws IOException {
         this.file = file;
         msgArea.append("\nLoaded file: " + this.file.getName() + "\n");
+        ServerFrame.dataOutputStream.writeUTF("file_input: " + file.getName());
+      //  sendFile.sendFile(this.file, ss, s);
     }
 }

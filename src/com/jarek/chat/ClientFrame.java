@@ -1,6 +1,7 @@
 package com.jarek.chat;
 
-import com.jarek.chat.extras.SendFileFrame;
+import com.jarek.chat.extras.SendFile;
+import com.jarek.chat.extras.SendFileGUI;
 import com.jarek.chat.gui.Gui;
 
 import javax.swing.*;
@@ -19,8 +20,8 @@ public class ClientFrame extends Gui implements ActionListener {
 
     static Socket s;
     static DataInputStream dataInputStream;
-    public static DataOutputStream dataOutputStream;
-    static final int mode = 1;
+    private static DataOutputStream dataOutputStream;
+    private SendFile sendFile = new SendFile();
 
     public ClientFrame(String title) {
         super(title);
@@ -30,7 +31,7 @@ public class ClientFrame extends Gui implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         if(e.getSource() == fileSend) {
-            SendFileFrame sendFile = new SendFileFrame(this);
+            SendFileGUI sendFile = new SendFileGUI(this);
         }
         else if(e.getSource() == msgSend) {
             try {
@@ -59,6 +60,8 @@ public class ClientFrame extends Gui implements ActionListener {
                 msgIn = dataInputStream.readUTF();
                 System.out.println(msgIn);
                 msgArea.setText(msgArea.getText() + "\nServer: " + msgIn);
+                    if(msgIn == "file_input")
+                        sendFile.receiveFile(s);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Receive message error! Check your " +
