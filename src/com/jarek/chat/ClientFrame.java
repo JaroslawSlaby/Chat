@@ -1,6 +1,5 @@
 package com.jarek.chat;
 
-import com.jarek.chat.extras.SendFile;
 import com.jarek.chat.extras.SendFileGUI;
 import com.jarek.chat.gui.Gui;
 
@@ -21,7 +20,7 @@ public class ClientFrame extends Gui implements ActionListener {
     static Socket s;
     static DataInputStream dataInputStream;
     private static DataOutputStream dataOutputStream;
-    private SendFile sendFile = new SendFile();
+
 
     public ClientFrame(String title) {
         super(title);
@@ -58,10 +57,12 @@ public class ClientFrame extends Gui implements ActionListener {
             dataOutputStream = new DataOutputStream(s.getOutputStream());
             while(!Objects.equals(msgIn, "exit")) {
                 msgIn = dataInputStream.readUTF();
-                System.out.println(msgIn);
+                    if(Objects.equals(msgIn, codes.sendFileNotification())) {
+                        // sendFile.receiveFile(s);
+                        msgIn = "Server's sending file!";
+                    }
                 msgArea.setText(msgArea.getText() + "\nServer: " + msgIn);
-                    if(msgIn == "file_input")
-                        sendFile.receiveFile(s);
+
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Receive message error! Check your " +

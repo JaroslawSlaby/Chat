@@ -2,6 +2,7 @@ package com.jarek.chat.gui;
 
 import com.jarek.chat.ClientFrame;
 import com.jarek.chat.ServerFrame;
+import com.jarek.chat.extras.Codes;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +25,7 @@ public class Gui extends JFrame implements ActionListener{
     private JButton clearArea = new JButton("Clear message area!");
     protected JButton fileSend = new JButton("Send file!");
     protected File file;
+    protected Codes codes = new Codes();
 
     public Gui(String title){
 
@@ -51,7 +53,7 @@ public class Gui extends JFrame implements ActionListener{
             int choice = JOptionPane.showConfirmDialog(container, "Exit?", "Close CHAT",
                     JOptionPane.OK_OPTION);
             if (choice == JOptionPane.OK_OPTION)
-                dispose();
+                System.exit(0);
         }
     });
     pack();

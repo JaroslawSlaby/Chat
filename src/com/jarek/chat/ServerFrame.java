@@ -1,5 +1,6 @@
 package com.jarek.chat;
 
+import com.jarek.chat.extras.Codes;
 import com.jarek.chat.extras.SendFile;
 import com.jarek.chat.extras.SendFileGUI;
 import com.jarek.chat.gui.Gui;
@@ -60,7 +61,7 @@ public class ServerFrame extends Gui implements ActionListener {
             while(!Objects.equals(msgIn, "exit")) {
                 msgIn = dataInputStream.readUTF();
                 System.out.println(msgIn);
-                msgArea.setText(msgArea.getText() + "\n" + msgIn);
+                msgArea.setText(msgArea.getText() + "\n" + s.toString() + ": "  + msgIn);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Receive message error! Check your " +
@@ -75,8 +76,9 @@ public class ServerFrame extends Gui implements ActionListener {
 
     public void setFile(File file) throws IOException {
         this.file = file;
-        msgArea.append("\nLoaded file: " + this.file.getName() + "\n");
-        ServerFrame.dataOutputStream.writeUTF("file_input: " + file.getName());
-      //  sendFile.sendFile(this.file, ss, s);
+        msgArea.append("\n Loaded file: " + this.file.getName() + "\n");
+        ServerFrame.dataOutputStream.writeUTF(codes.sendFileNotification());
+      //  sendFile.sendFile(this.file, fileSocket);
     }
+
 }

@@ -23,20 +23,17 @@ public class SendFile {
     private int bytesRead;
     private int curTotal;
 
-    public void sendFile(File file, ServerSocket serverSocket, Socket socket) throws IOException {
-        socket = serverSocket.accept();
+    public void sendFile(File file, Socket socket) throws IOException {
         this.file = file;
         fileByteArray = new byte[(int)file.length()];
         fileInputStream = new FileInputStream(this.file);
         bufferedInputStream = new BufferedInputStream(fileInputStream);
         bufferedInputStream.read(fileByteArray,0,fileByteArray.length);
-        outputStream = socket.getOutputStream(); // tu sie wykrzacza
+        outputStream = socket.getOutputStream(); // tu sie wykrzacza socket == null
         outputStream.write(fileByteArray,0,fileByteArray.length);
         outputStream.flush();
-      //  socket.close();
     }
     public void receiveFile(Socket socket) throws IOException{
-
         fileByteArray = new byte[MAX_FILE_SIZE];
         inputStream = socket.getInputStream();
         newFile = new File("/jarek.txt");
@@ -55,6 +52,5 @@ public class SendFile {
         bufferedOutputStream.write(fileByteArray, 0, curTotal);
         bufferedOutputStream.flush();
         bufferedOutputStream.close();
-        socket.close();
     }
 }
