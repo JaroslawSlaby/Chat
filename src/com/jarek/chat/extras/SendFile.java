@@ -13,34 +13,35 @@ import java.nio.file.Files;
 public class SendFile {
 
     private byte[] fileByteArray;
-    private File file;
-    private FileInputStream fileInputStream;
-    private FileOutputStream fileOutputStream;
-    private BufferedInputStream bufferedInputStream;
-    private BufferedOutputStream bufferedOutputStream;
-    private OutputStream outputStream;
-    private InputStream inputStream;
     private File newFile;
-
-    private static int MAX_FILE_SIZE = 20 * 1024;
-    private int bytesRead;
-    private int curTotal;
+    private JFileChooser chooser = new JFileChooser();
 
     public void sendFile(File file) throws IOException {
 
     }
 
-    public void receiveFile(Socket socket) throws IOException {
+    public Boolean receiveFile(Socket socket) throws IOException {
 
-        ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-        try {
-            fileByteArray = (byte []) objectInputStream.readObject();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        String fileName = JOptionPane.showInputDialog("Name of file: ");
-        newFile = new File(fileName);
-        Files.write(newFile.toPath(), fileByteArray);
+        int choose = JOptionPane.showConfirmDialog(null, "Incoming file! Recieve?", null, JOptionPane.YES_NO_OPTION);
+
+        if (choose == JOptionPane.YES_OPTION) {
+
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+            try {
+                fileByteArray = (byte[]) objectInputStream.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            chooser.setDialogTitle("Save a file!");
+            int result = chooser.showSaveDialog(chooser);
+            if (result == chooser.APPROVE_OPTION) {
+                newFile = chooser.getSelectedFile();
+                Files.write(newFile.toPath(), fileByteArray);
+            }
+            return true;
+
+        } else return false;
 
     }
 }

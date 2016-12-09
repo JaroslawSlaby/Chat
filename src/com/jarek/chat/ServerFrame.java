@@ -62,8 +62,13 @@ public class ServerFrame extends Gui implements ActionListener {
                 dataInputStream = new DataInputStream(s.getInputStream());
                 dataOutputStream = new DataOutputStream(s.getOutputStream());
                 msgIn = dataInputStream.readUTF();
-                System.out.println(msgIn);
-                msgArea.setText(msgArea.getText() + "\n" + s.toString() + ": "  + msgIn);
+                    if(Objects.equals(msgIn, codes.fileNotAccepted())) {
+                         msgIn = "Client did not accepted file!";
+                    }
+                    else {
+                        msgIn = "File sent!";
+                    }
+                msgArea.setText(msgArea.getText() + "\n"  + msgIn);
                 }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Receive message error! Check your " +

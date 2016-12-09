@@ -10,8 +10,7 @@ public class Codes {
         return "file_input";
     }
 
-    public String endOfSendingNotification()
-    {
-        return "Done!";
-    }
+    public String endOfSendingNotification() { return "Done!"; }
+
+    public String fileNotAccepted() { return  "not_accepted"; }
 }

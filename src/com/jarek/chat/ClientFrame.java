@@ -60,8 +60,12 @@ public class ClientFrame extends Gui implements ActionListener {
                 dataOutputStream = new DataOutputStream(s.getOutputStream());
                 msgIn = dataInputStream.readUTF();
                     if(Objects.equals(msgIn, codes.sendFileNotification())) {
-                        sendFile.receiveFile(s);
                         msgIn = "Server's sending file!";
+                        Boolean choose = sendFile.receiveFile(s);
+                        if(choose == false) {
+                            msgArea.append("\nFile not accepted!");
+                            dataOutputStream.writeUTF(codes.fileNotAccepted());
+                        }
                     }
                 msgArea.setText(msgArea.getText() + "\nServer: " + msgIn);
 
