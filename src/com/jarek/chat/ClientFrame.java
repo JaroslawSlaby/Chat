@@ -7,9 +7,11 @@ import com.jarek.chat.gui.Gui;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.Socket;
-import java.nio.file.Files;
 import java.util.Objects;
 
 /**
@@ -17,24 +19,10 @@ import java.util.Objects;
  */
 public class ClientFrame extends Gui implements ActionListener {
 
-    static Socket s;
+    private static Socket s;
     private static DataInputStream dataInputStream;
     private static DataOutputStream dataOutputStream;
     private SendFile sendFile = new SendFile();
-
-    private byte[] fileByteArray;
-    private FileInputStream fileInputStream;
-    private FileOutputStream fileOutputStream;
-    private BufferedInputStream bufferedInputStream;
-    private BufferedOutputStream bufferedOutputStream;
-    private OutputStream  outputStream;
-    private InputStream inputStream;
-    private File newFile = new File("hahaa.txt");
-
-    private static int MAX_FILE_SIZE = 20*1024;
-    private int bytesRead;
-    private int curTotal;
-
 
     public ClientFrame(String title) {
         super(title);

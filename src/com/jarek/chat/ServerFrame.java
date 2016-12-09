@@ -26,13 +26,6 @@ public class ServerFrame extends Gui implements ActionListener {
     private SendFile sendFile = new SendFile();
 
     private byte[] fileByteArray;
-    private FileInputStream fileInputStream;
-    private FileOutputStream fileOutputStream;
-    private BufferedInputStream bufferedInputStream;
-    private BufferedOutputStream bufferedOutputStream;
-    private OutputStream  outputStream;
-    private InputStream inputStream;
-    private File newFile;
 
     public ServerFrame(String title) {
         super(title);
