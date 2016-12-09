@@ -1,15 +1,15 @@
 package com.jarek.chat;
 
+import com.jarek.chat.extras.SendFile;
 import com.jarek.chat.extras.SendFileGUI;
 import com.jarek.chat.gui.Gui;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
+import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
 import java.util.Objects;
 
 /**
@@ -18,8 +18,22 @@ import java.util.Objects;
 public class ClientFrame extends Gui implements ActionListener {
 
     static Socket s;
-    static DataInputStream dataInputStream;
+    private static DataInputStream dataInputStream;
     private static DataOutputStream dataOutputStream;
+    private SendFile sendFile = new SendFile();
+
+    private byte[] fileByteArray;
+    private FileInputStream fileInputStream;
+    private FileOutputStream fileOutputStream;
+    private BufferedInputStream bufferedInputStream;
+    private BufferedOutputStream bufferedOutputStream;
+    private OutputStream  outputStream;
+    private InputStream inputStream;
+    private File newFile = new File("hahaa.txt");
+
+    private static int MAX_FILE_SIZE = 20*1024;
+    private int bytesRead;
+    private int curTotal;
 
 
     public ClientFrame(String title) {
@@ -53,19 +67,20 @@ public class ClientFrame extends Gui implements ActionListener {
         try {
             String msgIn = "";
             s = new Socket("127.0.0.1" , 1220);
-            dataInputStream = new DataInputStream(s.getInputStream());
-            dataOutputStream = new DataOutputStream(s.getOutputStream());
             while(!Objects.equals(msgIn, "exit")) {
+                dataInputStream = new DataInputStream(s.getInputStream());
+                dataOutputStream = new DataOutputStream(s.getOutputStream());
                 msgIn = dataInputStream.readUTF();
                     if(Objects.equals(msgIn, codes.sendFileNotification())) {
-                        // sendFile.receiveFile(s);
+                        sendFile.receiveFile(s);
                         msgIn = "Server's sending file!";
                     }
                 msgArea.setText(msgArea.getText() + "\nServer: " + msgIn);
 
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Receive message error! Check your " +
+        }
+        catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, "Receive message error! Check your " +
                     "connection!", "Receive error!", JOptionPane.ERROR_MESSAGE);
         }
 
@@ -79,8 +94,8 @@ public class ClientFrame extends Gui implements ActionListener {
     }
 
     public void setFile(File file) {
-
         this.file = file;
         msgArea.append("\nLoaded file: " + this.file.getName() + "\n");
     }
+
 }

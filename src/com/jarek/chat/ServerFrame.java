@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
 import java.util.Objects;
 
 /**
@@ -19,10 +20,19 @@ import java.util.Objects;
 public class ServerFrame extends Gui implements ActionListener {
 
     private static ServerSocket ss;
-    private static Socket s;
+    public static Socket s;
     private static DataInputStream dataInputStream;
     private static DataOutputStream dataOutputStream;
     private SendFile sendFile = new SendFile();
+
+    private byte[] fileByteArray;
+    private FileInputStream fileInputStream;
+    private FileOutputStream fileOutputStream;
+    private BufferedInputStream bufferedInputStream;
+    private BufferedOutputStream bufferedOutputStream;
+    private OutputStream  outputStream;
+    private InputStream inputStream;
+    private File newFile;
 
     public ServerFrame(String title) {
         super(title);
@@ -42,11 +52,10 @@ public class ServerFrame extends Gui implements ActionListener {
                     ServerFrame.dataOutputStream.writeUTF(msgOut);
                     msgText.setText("");
                 }
-
             } catch (Exception i) {
                 JOptionPane.showMessageDialog(this, "Send message error! Check your " +
-                        "connection or if other " +
-                        "is closed!", "Send error!", JOptionPane.ERROR_MESSAGE);
+                        "connection or if any client exists and " +
+                        "is not closed!", "Send error!", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -55,14 +64,14 @@ public class ServerFrame extends Gui implements ActionListener {
         try {
             String msgIn = "";
             ss = new ServerSocket(1220); //number of server starting port
-            s = ss.accept(); //accepting connections to server
-            dataInputStream = new DataInputStream(s.getInputStream());
-            dataOutputStream = new DataOutputStream(s.getOutputStream());
+            s = ss.accept();                 //accepting connections to server
             while(!Objects.equals(msgIn, "exit")) {
+                dataInputStream = new DataInputStream(s.getInputStream());
+                dataOutputStream = new DataOutputStream(s.getOutputStream());
                 msgIn = dataInputStream.readUTF();
                 System.out.println(msgIn);
                 msgArea.setText(msgArea.getText() + "\n" + s.toString() + ": "  + msgIn);
-            }
+                }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Receive message error! Check your " +
                 "connection!", "Receive error!", JOptionPane.ERROR_MESSAGE);
@@ -70,15 +79,25 @@ public class ServerFrame extends Gui implements ActionListener {
     }
 
     public static void main(String[] args) {
-            ServerFrame serverFrame = new ServerFrame("Server");
-            serverFrame.listen();
+        ServerFrame serverFrame = new ServerFrame("Server");
+        serverFrame.listen();
     }
 
-    public void setFile(File file) throws IOException {
+    public void setFile(File file) {
         this.file = file;
         msgArea.append("\n Loaded file: " + this.file.getName() + "\n");
-        ServerFrame.dataOutputStream.writeUTF(codes.sendFileNotification());
-      //  sendFile.sendFile(this.file, fileSocket);
+        try {
+            ServerFrame.dataOutputStream.writeUTF(codes.sendFileNotification());
+            sendFile();
+            ServerFrame.dataOutputStream.writeUTF(codes.endOfSendingNotification());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    private void sendFile() throws IOException {
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(s.getOutputStream());
+        fileByteArray = Files.readAllBytes(file.toPath());
+        objectOutputStream.writeObject(fileByteArray);
+    }
 }

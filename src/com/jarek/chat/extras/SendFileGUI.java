@@ -23,7 +23,7 @@ public class SendFileGUI extends JPanel implements ActionListener {
     private JButton cancel = new JButton("Cancel!");
     private JTextField fileName;
     private JTextField filePath;
-    public File file = null;
+    private File file = null;
 
     private ClientFrame clientFrame;
     private ServerFrame serverFrame;
@@ -31,7 +31,6 @@ public class SendFileGUI extends JPanel implements ActionListener {
 
 
     private void showGUI() {
-
         fileName = new JTextField();
         fileName.setEditable(false);
         filePath = new JTextField();
@@ -73,9 +72,7 @@ public class SendFileGUI extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e){
 
         if(e.getSource() == selectFile) {
-
             int returnVal = fileChooser.showOpenDialog(SendFileGUI.this);
-
             if(returnVal == JFileChooser.APPROVE_OPTION) {
 
                 file = fileChooser.getSelectedFile();
@@ -92,11 +89,7 @@ public class SendFileGUI extends JPanel implements ActionListener {
             if(mode == 1)
                 clientFrame.setFile(this.file);
             else if(mode == 2)
-                try {
-                    serverFrame.setFile(this.file);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                serverFrame.setFile(this.file);
             frame.dispose();
         }
 

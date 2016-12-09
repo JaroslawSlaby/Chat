@@ -9,4 +9,9 @@ public class Codes {
     {
         return "file_input";
     }
+
+    public String endOfSendingNotification()
+    {
+        return "Done!";
+    }
 }
